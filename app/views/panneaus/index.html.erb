@@ -3,7 +3,7 @@
 <body onload="onBodyLoad();">
 
 <hr>
-  
+
   <div class="row">
       <div href="#" class="button small-12 large-12 columns" onclick="init_geoloc();">Actualiser la position</div>
   </div>
@@ -17,10 +17,13 @@
   <hr>
 
   <!-- load giff-->
-  <div class= "modal"></div>
-
+  <!--<div class= "modal"></div>-->
   <div class="row">
-    <div style="max-height: 800px; height: 300px;" class="small-12 large-12 columns" id="mapdiv"></div>
+    <div style="max-height: 800px; height: 300px;" class="small-12 large-12 columns" id="mapid" class="map"></div>
+  </div>
+  <%= javascript_include_tag "leaflet" %>
+  <div class="row">
+    <div style="max-height: 800px; height: 300px;" class="small-12 large-12 columns" id="map" class="map"></div>
   </div>
 
   <hr>
@@ -28,7 +31,7 @@
   <%@panneaus.each do |panneau|%>
     <tr>
       <td> <%= panneau[:name] %> </td>
-      <td>  
+      <td>
         <% if panneau.updated_at %>
           <%= panneau.updated_at %>
         <% else %>
@@ -36,7 +39,7 @@
         <% end%>
       </td>
       <td>
-        <% if panneau[:is_ok] %> 
+        <% if panneau[:is_ok] %>
           <i class="gen-enclosed foundicon-checkmark"><p id=<%=panneau.id%> >Bonne état</p></i>
         <%else%>
           <i class="social foundicon-thumb-down panneau_pourri"><p id=<%=panneau.id%>>A recoller</p></i>
@@ -58,4 +61,3 @@
 
     }
   </script>
-

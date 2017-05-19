@@ -4,15 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= content_for?(:title) ? yield(:title) : "#MA VOIX" %></title>
+
+
+   <style>#mapid {height: 180px;}</style>
     <%= stylesheet_link_tag    "application" %>
-    <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
-    
+
     <link rel="icon" href="https://www.mavoix.info/wp-content/uploads/2017/03/cropped-icon-32x32.png" sizes="32x32">
     <link rel="icon" href="https://www.mavoix.info/wp-content/uploads/2017/03/cropped-icon-192x192.png" sizes="192x192">
     <link rel="apple-touch-icon-precomposed" href="https://www.mavoix.info/wp-content/uploads/2017/03/cropped-icon-180x180.png">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js"></script>
+
 
   </head>
 
@@ -31,7 +33,13 @@
         <div id='footer'>
            Licence WTFPL.
         </div>
-
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+      integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+      crossorigin=""/>
+      <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+       integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+       crossorigin=""></script>
+        <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
         <a href="https://github.com/adebeo/adopteunpanneau2"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
 
     </body>

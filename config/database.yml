@@ -23,13 +23,10 @@ default: &default
 
 development:
   <<: *default
-  username: postgres
+  username: pguser
   password: newpassword
   host: localhost
-  pool: 5
-  timeout: 5000
-  port: 5433
-  database: adopteunpanneau2_development
+  database: adopteunpanneau_ol4_development
 
 
   # The specified database role being used to connect to postgres.
@@ -64,8 +61,8 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: adopteunpanneau2_test
-  username: postgres
+  database: adopteunpanneau_ol4_test
+  username: pguser
   password: newpassword
   host: localhost
   pool: 5
@@ -93,6 +90,6 @@ test:
 #
 production:
   <<: *default
-  database: adopteunpanneau2_production
+  database: adopteunpanneau_ol4_production
   username: adopteunpanneau2
   password: <%= ENV['ADOPTEUNPANNEAU2_DATABASE_PASSWORD'] %>

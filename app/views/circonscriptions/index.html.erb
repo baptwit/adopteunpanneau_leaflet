@@ -6,9 +6,9 @@
   <%@circonscriptions.each do |circonscription|%>
     <tr>
       <td>
-        <%= link_to "/panneaus?ville=#{circonscription}", target: :_blank do %>
+        <%= link_to "/panneaus?ville=#{circonscription}" do %>
             <%= circonscription.gsub("_"," ") %>
-        <% end %> 
+        <% end %>
       </td>
 
     </tr>
@@ -32,15 +32,15 @@
         <li>Si il est jaune , c'est qu'il est en bonne état.</li>
       </ul>
       Si le panneau le plus proche que vous voyez est:
-      <ul> 
+      <ul>
         <li>endommagé, appuyez sur <span class="button">A recoller</span></li>
         <li>réparé par vos soins, appuyez sur <span class="button">Bon état</span></li>
       </ul>
-      
+
       Pour mettre à jour le panneau en fonction de votre position: <span class="button">Actualiser la position</span>.
 
       <h2>HTPPS</h2>
-      
+
       Pour que le site fonctionne assurer vous d'être bien en https ( le petit cadenas sur la barre d'adresse du navigateur), sinon cliquez sur ce <a href="https://adopteunpanneau.herokuapp.com"><span class="button"> lien</span> </a>.
 
       <h2>Activer la GEOLOCALISATION</h2>

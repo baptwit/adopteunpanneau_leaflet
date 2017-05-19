@@ -17,15 +17,36 @@
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
+loadGiff(false);
 
-var map;
-var zoom=16;
-var spec_update;
+//openlayers 2
+// var map;
+// var zoom=16;
+// var spec_update;
+// var is_update_running = false;
+// var markers ;
+
+//leaflet
 var is_update_running = false;
-var markers ;
+var markersL = new Array;
+var mymap;
+var LeafIcon = L.Icon.extend({
+    options: {
+        //shadowUrl: 'leaf-shadow.png',
+        iconSize:     [21, 21],
+        //shadowSize:   [50, 64],
+        iconAnchor:   [21, 21],
+        //shadowAnchor: [4, 62],
+        popupAnchor:  [-10, -21]
+    }
+});
+
+var okIcon = new LeafIcon({iconUrl: '/mavoix-ok.png'});
+var noIcon = new LeafIcon({iconUrl: '/mavoix-no.png'});
+var markerL;
 
 
-function init_geoloc(new_spec_update){      
+function init_geoloc(new_spec_update){
   function maPosition(position) {
     var lat = position.coords.latitude;
     var long = position.coords.longitude;
@@ -59,21 +80,21 @@ function init_geoloc(new_spec_update){
       path += "&id_panneaux="+id_panneaux;
     }
 
-    globalAjaxCall("get",path,"");       
+    globalAjaxCall("get",path,"");
   }
 
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(maPosition);
   } else {
     $("H1").html("! Activer la Geoloc !");
-    loadGiff(false);
+    //loadGiff(false);
   }
 
 }
 
 
 function change_panneaus_info(spec_update) {
-  loadGiff(true);
+  //loadGiff(true);
   spec_update['id_panneaux'] = $("#closest_panneau").attr("id_panneaux");
   init_geoloc(spec_update);
 }
@@ -93,83 +114,88 @@ function globalAjaxCall(http_method, url, data){
       $("#closest_panneau").attr("lat",closest_panneau.lat);
       $("#closest_panneau").attr("long",closest_panneau.long);
       $("#closest_panneau").attr("id_panneaux",closest_panneau.id);
-      if (typeof map == 'undefined'){
+      if (typeof mymap == 'undefined'){
         console.log("create map");
         create_map(panneaus);
       } else {
         console.log("update map");
         update_map(panneaus);
       }
-      loadGiff(false);
+      //loadGiff(false);
     });
     return {"ok":"dd"}
 }
 
 function create_map(panneaus){
-    map = new OpenLayers.Map("mapdiv");
+    console.log("create map");
+    mymap = L.map('mapid');
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+        crs: L.CRS.EPSG4326
+    }).addTo(mymap);
+    console.log(mymap);
     add_panneaus(panneaus);
 }
 
 function update_map(panneaus){
   if (is_update_running == false){
     is_update_running = true;
-    markers_last = markers.markers[markers.markers.length-1]
+    markers_last = markersL[markersL.length-1];
     if (typeof spec_update != 'undefined'){
       if (spec_update.is_ok == true){
-        markers_last.setUrl('mavoix-ok.png');  
+        console.log(markers_last);
+        markers_last.setIcon(okIcon);
         $("#"+spec_update.id_panneaux).html("Bonne état");
       } else {
-        markers_last.setUrl('mavoix-no.png');  
+        console.log(markers_last);
+        markers_last.setIcon(noIcon);
         $("#"+spec_update.id_panneaux).html("A recoller");
-      }   
+      }
     }
     is_update_running = false;
   }
 }
 
 
-function update_map_center(position){
-    var lat = position.coords.latitude;
-    var long = position.coords.longitude;
-    var new_position = new OpenLayers.LonLat( long,lat )
-        .transform(
-          new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-          map.getProjectionObject() // to Spherical Mercator Projection
-        );
-    map.setCenter (new_position, 16);
-  
-}
+// function update_map_center(position){
+//     var lat = position.coords.latitude;
+//     var long = position.coords.longitude;
+//     console.log("Long: " + long + " Lat: " + lat);
+//     map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'));
+//     map.getView().setZoom(16);
+//
+// }
 
 //////// LIBRAIRIE ////////
 
-function get_marker_info(panneau){
-    var marker_info = new OpenLayers.LonLat( panneau.lat ,panneau.long )
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
-    return marker_info;
-}
+// function get_marker_info(panneau){
+//     var marker_info = new OpenLayers.LonLat( panneau.lat ,panneau.long )
+//           .transform(
+//             new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+//             map.getProjectionObject() // to Spherical Mercator Projection
+//           );
+//     return marker_info;
+// }
 
 function add_panneaus(panneaus){
-  map.addLayer(new OpenLayers.Layer.OSM());
-  markers = new OpenLayers.Layer.Markers( "Markers" );
-  map.addLayer(markers);  
   for (var i = panneaus.length - 1; i >= 0; i--) {
     var panneau = panneaus[i];
-    var marker_info_closest_panneau = get_marker_info(panneau);
 
-    var size = new OpenLayers.Size(21,21);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    //var marker_info_closest_panneau = get_marker_info(panneau);
 
     if (panneau.is_ok == true){
-      var icon = new OpenLayers.Icon('/mavoix-ok.png',size,offset);
+      var iconOkorNo = okIcon;
+      var popup = "le panneau est bon";
     }  else {
-      var icon = new OpenLayers.Icon('/mavoix-no.png',size,offset);
+      var iconOkorNo = noIcon;
+      var popup = "le panneau est à recoller";
     }
-    markers.addMarker(new OpenLayers.Marker(marker_info_closest_panneau,icon)); 
-  }  
-  map.setCenter (marker_info_closest_panneau, zoom);
+    markerL = L.marker([panneau.long, panneau.lat], {icon: iconOkorNo});
+    markersL.push (markerL);
+    markerL.addTo(mymap).bindPopup(popup);
+  }
+  mymap.setView([panneau.long, panneau.lat], 16);
 }
 
 function loadGiff(hideit){
@@ -181,5 +207,3 @@ function loadGiff(hideit){
         $body.removeClass("loading");
     }
 }
-
-
