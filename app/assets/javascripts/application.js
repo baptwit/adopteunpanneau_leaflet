@@ -129,7 +129,7 @@ function globalAjaxCall(http_method, url, data){
 function create_map(panneaus){
     console.log("create map");
     mymap = L.map('mapid');
-    // google maps
+    // google maps test
     var roads = L.gridLayer.googleMutant({
         type: 'roadmap' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
     }).addTo(mymap);
