@@ -129,11 +129,16 @@ function globalAjaxCall(http_method, url, data){
 function create_map(panneaus){
     console.log("create map");
     mymap = L.map('mapid');
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-        crs: L.CRS.EPSG4326
+    // google maps
+    var roads = L.gridLayer.googleMutant({
+        type: 'roadmap' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
     }).addTo(mymap);
+    //OSM
+    // L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+    //     maxZoom: 18,
+    //     crs: L.CRS.EPSG4326
+    // }).addTo(mymap);
     console.log(mymap);
     add_panneaus(panneaus);
 }

@@ -24,7 +24,7 @@ default: &default
 development:
   <<: *default
   username: pguser
-  password: newpassword
+  password: lolpass123
   host: localhost
   database: adopteunpanneau_ol4_development
 
